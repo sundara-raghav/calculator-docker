@@ -9,7 +9,7 @@ A simple calculator application built with Node.js and Express, containerized wi
 To build the Docker image locally:
 
 ```bash
-docker build -t sundararaghav0306/calculator:latest .
+docker build -t sundararaghav0306/calculator:v1.0   
 ```
 
 ### Run the Container Locally
@@ -17,7 +17,7 @@ docker build -t sundararaghav0306/calculator:latest .
 Run the container mapping port 5000 on your host to port 3000 in the container:
 
 ```bash
-docker run -p 5000:3000 sundararaghav0306/calculator:latest
+docker run -p 5000:3000 sundararaghav0306/calculator:v1.0   
 ```
 
 Access the application at `http://localhost:5000`.
@@ -29,13 +29,13 @@ You can also test the application by pulling the pre-built image directly from D
 1.  **Pull the Image:**
 
     ```bash
-    docker pull sundararaghav0306/calculator:latest
+    docker pull sundararaghav0306/calculator:v1.0   
     ```
 
 2.  **Run the Pulled Image:**
 
     ```bash
-    docker run -p 5000:3000 sundararaghav0306/calculator:latest
+    docker run -p 5000:3000 sundararaghav0306/calculator:v1.0   
     ```
 
 3.  **Access the App:**
