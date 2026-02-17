@@ -2,40 +2,17 @@
 
 A simple calculator application built with Node.js and Express, containerized with Docker.
 
-## Project Structure
-
-- `server.js`: The Express server that serves the application.
-- `index.html`: The frontend calculator interface.
-- `Dockerfile`: Configuration for building the Docker image.
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) (for local development)
-- [Docker](https://www.docker.com/) (for containerized execution)
-
-## Local Setup
-
-1.  Install dependencies:
-    ```bash
-    npm install
-    ```
-
-2.  Start the server:
-    ```bash
-    node server.js
-    ```
-
-3.  Open your browser and navigate to `http://localhost:3000`.
-
-## Docker Usage
+## Docker Instructions
 
 ### Build the Image
+
+To build the Docker image locally:
 
 ```bash
 docker build -t sundararaghav0306/calculator:latest .
 ```
 
-### Run the Container
+### Run the Container Locally
 
 Run the container mapping port 5000 on your host to port 3000 in the container:
 
@@ -44,3 +21,22 @@ docker run -p 5000:3000 sundararaghav0306/calculator:latest
 ```
 
 Access the application at `http://localhost:5000`.
+
+## Testing with Docker Hub Image
+
+You can also test the application by pulling the pre-built image directly from Docker Hub without building it yourself.
+
+1.  **Pull the Image:**
+
+    ```bash
+    docker pull sundararaghav0306/calculator:latest
+    ```
+
+2.  **Run the Pulled Image:**
+
+    ```bash
+    docker run -p 5000:3000 sundararaghav0306/calculator:latest
+    ```
+
+3.  **Access the App:**
+    Open your browser and navigate to [http://localhost:5000](http://localhost:5000).
