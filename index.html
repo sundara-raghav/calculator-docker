@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Calculator</title>
+    <style>
+        :root {
+            --bg-color: #e0e5ec;
+            --text-color: #333;
+            --shadow-light: #ffffff;
+            --shadow-dark: #a3b1c6;
+            --primary-color: #4a90e2;
+            --operator-color: #ff9f43;
+            --equal-color: #2ecc71;
+            --clear-color: #e74c3c;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px var(--shadow-dark),
+                        -20px -20px 60px var(--shadow-light);
+            width: 320px;
+        }
+
+        .display {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 20px;
+            border: none;
+            outline: none;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            box-shadow: inset 6px 6px 12px var(--shadow-dark),
+                        inset -6px -6px 12px var(--shadow-light);
+            font-size: 2rem;
+            text-align: right;
+            padding: 0 20px;
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        button {
+            height: 60px;
+            width: 60px;
+            border: none;
+            outline: none;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            box-shadow: 6px 6px 12px var(--shadow-dark),
+                        -6px -6px 12px var(--shadow-light);
+            color: var(--text-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        button:active {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark),
+                        inset -4px -4px 8px var(--shadow-light);
+            transform: scale(0.95);
+        }
+
+        button.operator {
+            color: var(--primary-color);
+        }
+
+        button.equal {
+            background-color: var(--equal-color);
+            color: white;
+            grid-column: span 2;
+            width: 100%;
+            border-radius: 15px;
+        }
+        
+        button.equal:active {
+             background-color: #27ae60;
+        }
+
+        button.clear {
+            color: var(--clear-color);
+        }
+        
+        button.bracket {
+             color: var(--operator-color);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <input type="text" class="display" id="display" readonly>
+    <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">AC</button>
+        <button class="bracket" onclick="deleteChar()">DEL</button>
+        <button class="operator" onclick="appendOperator('%')">%</button>
+        <button class="operator" onclick="appendOperator('/')">/</button>
+
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('*')">*</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('-')">-</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
+
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+
+    function appendNumber(number) {
+        display.value += number;
+    }
+
+    function appendOperator(operator) {
+        const lastChar = display.value.slice(-1);
+        if (display.value === '' && operator !== '-') return;
+        if (['+', '-', '*', '/', '%'].includes(lastChar)) {
+            display.value = display.value.slice(0, -1) + operator;
+        } else {
+            display.value += operator;
+        }
+    }
+
+    function clearDisplay() {
+        display.value = '';
+    }
+
+    function deleteChar() {
+        display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+        try {
+            // Using Function constructor for a safer alternative to eval in this contained scope, 
+            // generally safer to use a parser but for a simple calculator client-side this is standard practice.
+            // Replacing 'x' with '*' if users were typing x, but our buttons send *
+            let expression = display.value;
+            if (!expression) return;
+            
+            // Basic validation to prevent execution of arbitrary code if manually entered
+            if (/[^0-9+\-*/.%]/.test(expression)) {
+                 throw new Error("Invalid Input");
+            }
+            
+            display.value = new Function('return ' + expression)();
+        } catch (error) {
+            display.value = 'Error';
+            setTimeout(() => clearDisplay(), 1000);
+        }
+    }
+    
+    // Keyboard support
+    document.addEventListener('keydown', (event) => {
+        const key = event.key;
+        if (/[0-9]/.test(key)) appendNumber(key);
+        if (['+', '-', '*', '/', '%'].includes(key)) appendOperator(key);
+        if (key === 'Enter') calculate();
+        if (key === 'Backspace') deleteChar();
+        if (key === 'Escape') clearDisplay();
+        if (key === '.') appendNumber('.');
+    });
+</script>
+
+</body>
+</html>
